@@ -17,15 +17,25 @@ const PORT = 3000;
 
 app.use(express.json());
 
-// Initialize Gemini client strictly using @google/genai SDK on the server-side
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
+// Initialize Gemini client strictly using @google/genai SDK on the server-side lazily
+let aiClient: GoogleGenAI | null = null;
+function getGeminiClient(): GoogleGenAI {
+  if (!aiClient) {
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) {
+      throw new Error("GEMINI_API_KEY environment variable is required");
     }
+    aiClient = new GoogleGenAI({
+      apiKey: key,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        }
+      }
+    });
   }
-});
+  return aiClient;
+}
 
 /**
  * API: Predict Flood Risk & Generate Operations Guidance via Gemini
@@ -79,7 +89,7 @@ app.post("/api/predict", async (req, res) => {
 ขอคำตอบในรูปแบบ Markdown ที่สวยงาม จัดหมวดหมู่ชัดเจน สะดุดตา และใช้สี/สัญลักษณ์อิโมจิให้เข้ากับศูนย์บัญชาการ เช่น 🚨 📈 🌊 🛡️ 👤
 `;
 
-    const response = await ai.models.generateContent({
+    const response = await getGeminiClient().models.generateContent({
       model: "gemini-3.5-flash",
       contents: prompt,
     });
