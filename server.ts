@@ -6,7 +6,6 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 
 // Load environment variables
@@ -17,18 +16,9 @@ const PORT = 3000;
 
 app.use(express.json());
 
-// Initialize Gemini client strictly using @google/genai SDK on the server-side
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
-    }
-  }
-});
-
 /**
- * API: Predict Flood Risk & Generate Operations Guidance via Gemini
+ * API: Predict Flood Risk & Generate Operations Guidance locally (Rule-based)
+ * This removes dependency on Gemini API Key.
  */
 app.post("/api/predict", async (req, res) => {
   try {
@@ -46,70 +36,105 @@ app.post("/api/predict", async (req, res) => {
       shelter_capacity_pct
     } = req.body;
 
-    // Build structured prompt for Gemini 3.5 Flash in Thai language
-    const prompt = `
-คุณเป็นผู้เชี่ยวชาญด้านอุทกภัยและผู้บัญชาการศูนย์ควบคุมข้อมูลภัยพิบัติน้ำท่วม (Disaster Operation Center) ประจำจังหวัดยะลา 
-โปรดวิเคราะห์สถานการณ์น้ำท่วมและคาดการณ์ความเสี่ยงจากข้อมูล Telemetry, โครงสร้างพื้นฐาน และสถานการณ์ประชาชนต่อไปนี้:
+    // Calculate a rule-based mock score
+    let ruleScore = 15;
+    ruleScore += (rainfall_24h / 350) * 35;
+    if (water_level_msl > 3.5) ruleScore += 20;
+    if (water_level_msl > 5.0) ruleScore += 15;
+    const failedPercentage = total_pumps > 0 ? (total_pumps - active_pumps) / total_pumps : 0;
+    ruleScore += failedPercentage * 20;
+    
+    const calculatedScore = Math.min(100, Math.max(0, ruleScore));
+    let calculatedStatus = "Safe";
+    if (calculatedScore >= 75) calculatedStatus = "Critical";
+    else if (calculatedScore >= 45) calculatedStatus = "Warning";
 
-[ข้อมูลปริมาณน้ำฝน]
-- ปริมาณน้ำฝนสะสม 24 ชั่วโมงล่าสุด: ${rainfall_24h} mm (ค่าสูงสุดประวัติการณ์ของพื้นที่คือ 303.6 mm/day)
-- ปริมาณน้ำฝนสะสม 5 วัน (120 ชั่วโมง): ${rainfall_120h} mm (ค่าวิกฤตสะสมคือ 1,072 mm)
+    const statusEmoji = calculatedStatus === 'Critical' ? '🚨' : calculatedStatus === 'Warning' ? '⚠️' : '✅';
+    const statusText = calculatedStatus === 'Critical' ? 'วิกฤตสูงสุด' : calculatedStatus === 'Warning' ? 'เฝ้าระวัง' : 'ปกติ';
 
-[ข้อมูลระดับน้ำและการไหลร่ว]
-- ระดับน้ำเฉลี่ยปัจจุบันเทียบกับระดับน้ำทะเลปานกลาง (Water Level MSL): ${water_level_msl} เมตร (ปกติไม่ควรเกิน 3.5 เมตร, ระดับวิกฤตพนังกั้นน้ำล้นคือ 5.2 เมตร)
-- อัตราการไหลของแม่น้ำปัตตานี ณ จุดวัดหลัก: ${flow_rate} ลบ.ม./วินาที
+    // 1. Risk Analysis
+    let riskAnalysis = `สถานการณ์ภาพรวมอยู่ในเกณฑ์ **${statusText}** (คะแนนความเสี่ยง: ${calculatedScore.toFixed(0)}/100) `;
+    if (calculatedStatus === 'Critical') {
+      riskAnalysis += `เนื่องจากระดับน้ำแม่น้ำปัตตานีสูงวิกฤต (${water_level_msl} ม.) ร่วมกับปริมาณน้ำฝนสะสมสูงถึง ${rainfall_24h} มม. และพบปัญหาสถานีสูบน้ำชำรุด/น้ำท่วมดับ ${flooded_pumps} จุด`;
+    } else if (calculatedStatus === 'Warning') {
+      riskAnalysis += `พบสัญญาณเฝ้าระวังจากปริมาณฝนสะสมในพื้นที่ และปริมาณสัญญาณร้องขอช่วยเหลือ SOS (${sos_pings_count} จุด)`;
+    } else {
+      riskAnalysis += `ระดับน้ำฝนและระดับน้ำในแม่น้ำอยู่ในระดับควบคุม ปริมาณฝนสะสมทั่วไปต่ำกว่าเกณฑ์วิกฤต`;
+    }
 
-[ระบบระบายน้ำและปั๊มสูบน้ำ]
-- จำนวนสถานีสูบน้ำที่เดินเครื่องอยู่: ${active_pumps} จากทั้งหมด ${total_pumps} สถานี
-- สถานีระบายน้ำที่ถูกน้ำท่วมเครื่องยนต์หลักจนดับ (Engine Flooded): ${flooded_pumps} สถานี
-- มีการติดตั้งแนวพนังป้องกันน้ำท่วมเคลื่อนที่แบบบล็อกสำเร็จรูป (Flood Barrier Wall Deployment): ${barriers_deployed ? 'ติดตั้งสมบูรณ์' : 'ยังไม่ได้ติดตั้งหรือชำรุดบางจุด'}
+    // 2. Impacts (3 Main points)
+    let impactPoints = '';
+    if (rainfall_24h > 150 || water_level_msl > 4.2) {
+      impactPoints += `1. 🌊 **อุทกภัยริมตลิ่งล้นคันกั้นน้ำ**: แม่น้ำปัตตานีมีระดับน้ำล้นตลิ่งในเขตลุ่มต่ำ ชุมชนตลาดเก่าและชุมชนริมน้ำได้รับผลกระทบ\n`;
+    } else {
+      impactPoints += `1. 💧 **ระดับน้ำไหลเอ่อล้นระดับระบายปกติ**: น้ำในลุ่มแม่น้ำระบายช้าลง แต่อยู่ในเกณฑ์บริหารจัดการน้ำปกติ\n`;
+    }
+    if (flooded_pumps > 0) {
+      impactPoints += `2. 🔌 **สถานีสูบน้ำหลักชำรุด**: มีสถานีเครื่องยนต์น้ำท่วมขังหลักดับจำนวน ${flooded_pumps} จุด ส่งผลกระทบต่อประสิทธิภาพการระบายน้ำ\n`;
+    } else {
+      impactPoints += `2. ⚙️ **ระบบระบายน้ำพร้อมใช้งาน**: สถานีสูบน้ำและเครื่องสูบน้ำแบบเคลื่อนที่ทำงานเต็มประสิทธิภาพ\n`;
+    }
+    if (vulnerable_distress > 0) {
+      impactPoints += `3. 👥 **ผู้ประสบภัยกลุ่มเปราะบาง**: พบกลุ่มเปราะบางติดค้างในพื้นที่เสี่ยงภัยสีแดง จำนวน ${vulnerable_distress} ราย ต้องการการอพยพด่วน\n`;
+    } else {
+      impactPoints += `3. 🛡️ **ความปลอดภัยชุมชน**: ไม่มีกลุ่มเปราะบางตกค้างในพื้นที่อันตราย\n`;
+    }
 
-[ความมั่นคงทางสังคมและการอพยพ]
-- จำนวนประชาชนกลุ่มเปราะบาง (ผู้ป่วยติดเตียง, เด็ก, คนชรา) ที่อยู่ในโซนอันตรายสีแดง: ${vulnerable_distress} คน
-- จำนวนสัญญาณ SOS จากประชาชนที่มีรหัสพินบนแผนที่: ${sos_pings_count} จุด
-- อัตราการใช้งานศูนย์อพยพหลักทั้ง 7 แห่ง: ${shelter_capacity_pct}% ของความจุทั้งหมด
+    // 3. Response Guidelines
+    let responseGuidelines = '';
+    if (calculatedStatus === 'Critical') {
+      responseGuidelines += `🚨 **ระดมกำลังกู้ภัยด่วน**: จัดทีมเผชิญเหตุเข้าช่วยเหลือกลุ่มเปราะบางจำนวน ${vulnerable_distress} รายในเขตเสี่ยงภัยทันที\n`;
+      responseGuidelines += `⚙️ **แก้ไขระบบระบายน้ำ**: เร่งซ่อมแซมสถานีสูบน้ำที่ดับ ${flooded_pumps} จุด และติดตั้งเครื่องสูบน้ำเสริมระบบโมบายทดแทน\n`;
+      responseGuidelines += `🏘️ **เปิดศูนย์อพยพสำรอง**: ยกระดับความจุศูนย์อพยพหลัก (ปัจจุบันใช้งาน ${shelter_capacity_pct}%) และเปิดศูนย์อพยพสำรองเพิ่ม\n`;
+    } else {
+      responseGuidelines += `📈 **เฝ้าระวังระดับน้ำ**: ติดตามข้อมูล Telemetry ของระดับน้ำแม่น้ำปัตตานีอย่างต่อเนื่องทุกชั่วโมง\n`;
+      responseGuidelines += `🛡️ **เตรียมความพร้อมแนวกั้นน้ำ**: ตรวจสอบการติดตั้ง Flood Barrier และเตรียมกระสอบทรายสำรองในจุดวิกฤต\n`;
+      responseGuidelines += `📞 **ประสานงานสายด่วน SOS**: ตรวจเช็คข้อมูลพิน SOS ทั้งหมด ${sos_pings_count} จุด เพื่อส่งความช่วยเหลือทั่วไป\n`;
+    }
+
+    // 4. Forecast (24-48 Hours)
+    let forecast = '';
+    if (rainfall_24h > 150) {
+      forecast += `คาดการณ์ว่าในอีก 24-48 ชั่วโมงข้างหน้า หากยังมีปริมาณฝนสะสมเกิน 100 มม. ระดับน้ำปัตตานีจะสูงขึ้นอีก 0.3-0.5 เมตร ส่งผลให้พื้นที่ลุ่มต่ำตลาดเก่า ยะลา มีน้ำท่วมขังสูงขึ้น ขอให้เตรียมแผนอพยพประชาชนเพิ่มเติม`;
+    } else {
+      forecast += `คาดการณ์ระดับน้ำในอีก 24-48 ชั่วโมงข้างหน้ามีแนวโน้มทรงตัวหรือลดลงเล็กน้อยตามการชะลอตัวของกลุ่มฝนในพื้นที่ตอนบน แต่อยู่ในสภาวะเฝ้าระวังเป็นปกติ`;
+    }
+
+    const reportText = `### 📊 รายงานวิเคราะห์ระบบจำลองสถานการณ์อุทกภัยยะลา (Local Model)
 
 ---
-โปรดสรุปและวิเคราะห์ผลลัพธ์เป็นข้อๆ ภาษาไทยแบบเป็นทางการ เข้าใจง่าย กระชับ เหมาะสำหรับขึ้นหน้าจอผู้บริหารระดับสูง (Executive Level):
-1. [ระดับความเสี่ยงภาพรวม] ประเมินคะแนนความเสี่ยง (Flood Risk Score) 0-100 พร้อมระบุสถานะ (Safe / Warning / Critical) พร้อมเหตุผลหลัก
-2. [ผลกระทบหลัก 3 จุด] แนะนำวิเคราะห์ชุมชนที่เสี่ยงหนัก (จากข้อมูล ยะลามี 41 ชุมชนเสี่ยง) และประเด็นเรื่องเครื่องสูบน้ำล่มและฝนตกหนัก
-3. [แนวทางตอบสนองสายด่วนระบบ] สั่งการเร่งด่วน 3-4 ข้อ (เช่น การขยับเครื่องสูบน้ำสำรอง, สั่งการทีมกู้ภัยไปเคลียร์พิน SOS ในตำแหน่งเปราะบาง, แผนขยายศูนย์อพยพที่เต็ม)
-4. [พยากรณ์ล่วงหน้า 24-48 ชม.] วิเคราะห์แนวโน้มระดับน้ำหากปริมาณฝนเพิ่มขึ้นหรือลดลงและแนวโน้มแม่น้ำล้นตลิ่ง
 
-ขอคำตอบในรูปแบบ Markdown ที่สวยงาม จัดหมวดหมู่ชัดเจน สะดุดตา และใช้สี/สัญลักษณ์อิโมจิให้เข้ากับศูนย์บัญชาการ เช่น 🚨 📈 🌊 🛡️ 👤
-`;
+#### 1. ${statusEmoji} ระดับความเสี่ยงภาพรวม (Overall Risk Index)
+* **สถานะความเสี่ยง**: \`${statusText}\`
+* **ระดับคะแนนความเสี่ยง**: **${calculatedScore.toFixed(0)} / 100**
+* **บทวิเคราะห์**: ${riskAnalysis}
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents: prompt,
-    });
+---
 
-    const reportText = response.text || "ขอโทษด้วย ระบบไม่สามารถประเมินผลได้จากข้อผิดพลาดภายในเครื่อง";
-    
-    // Calculate a rule-based mock score as a fallback/co-verifier
-    let ruleScore = 20;
-    if (rainfall_24h > 100) ruleScore += 20;
-    if (rainfall_24h > 250) ruleScore += 15;
-    if (water_level_msl > 4.0) ruleScore += 20;
-    if (flooded_pumps > 0) ruleScore += 15;
-    if (sos_pings_count > 5) ruleScore += 10;
-    ruleScore = Math.min(ruleScore, 100);
+#### 2. 📈 ผลกระทบหลัก 3 จุดวิกฤต (3 Main Impacts)
+${impactPoints}
+---
 
-    let ruleStatus = "Safe";
-    if (ruleScore > 70) ruleStatus = "Critical";
-    else if (ruleScore > 40) ruleStatus = "Warning";
+#### 3. 🛡️ แนวทางตอบสนองสายด่วนระบบ (Operational Guidelines)
+${responseGuidelines}
+---
+
+#### 4. 🔮 พยากรณ์ล่วงหน้า 24-48 ชม. (Next 24-48 Hours Forecast)
+* ${forecast}
+
+*หมายเหตุ: ข้อมูลการประเมินและการทำนายนี้ประเมินผ่าน Rule-based Engine ภายในท้องถิ่นเพื่อรองรับการประมวลผลออฟไลน์โดยไม่ต้องรันผ่านระบบ API*`;
 
     res.json({
       success: true,
       report: reportText,
-      calculatedScore: ruleScore,
-      calculatedStatus: ruleStatus
+      calculatedScore,
+      calculatedStatus
     });
   } catch (error) {
-    console.error("Gemini server error: ", error);
+    console.error("Local calculation server error: ", error);
     res.status(500).json({
       success: false,
-      error: "หน่วยประมวลผลวิเคราะห์ด้วยปัญญาประดิษฐ์ (AI Prediction) ขัดข้องชั่วคราว"
+      error: "ระบบคำนวณจำลองสถานการณ์อุทกภัยขัดข้อง"
     });
   }
 });
