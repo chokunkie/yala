@@ -1,0 +1,117 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 1. Global Safety Net (Default-Deny Catch-All)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reuseable global helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\\\-]+$');
+    }
+
+    // 2. Validation Blueprints (Anti-Update-Gap)
+    function isValidSOSReport(data) {
+      return data.keys().hasAll(['lat', 'lng', 'communityName', 'vulnerablePop', 'category', 'reporterName', 'reporterPhone', 'status', 'createdAt'])
+        && data.lat is number
+        && data.lng is number
+        && data.communityName is string && data.communityName.size() <= 100
+        && data.vulnerablePop is int && data.vulnerablePop >= 0 && data.vulnerablePop <= 100000
+        && data.category is string && (data.category == 'rescue' || data.category == 'water_food' || data.category == 'medical_aid' || data.category == 'power_outage')
+        && data.reporterName is string && data.reporterName.size() <= 100
+        && data.reporterPhone is string && data.reporterPhone.size() <= 30
+        && data.status is string && (data.status == 'pending' || data.status == 'dispatching' || data.status == 'resolved')
+        // Optional fields should be validated if they exist
+        && (!data.keys().contains('severity') || (data.severity == 'high' || data.severity == 'critical'))
+        && (!data.keys().contains('assignedTeam') || (data.assignedTeam is string && data.assignedTeam.size() <= 128))
+        && (!data.keys().contains('description') || (data.description is string && data.description.size() <= 1000))
+        && (!data.keys().contains('updatedAt') || (data.updatedAt is string && data.updatedAt.size() <= 100));
+    }
+
+    function isValidPumpStation(data) {
+      return data.keys().hasAll(['id', 'name', 'lat', 'lng', 'capacity', 'isOperational', 'isEngineFlooded', 'flowRate', 'updatedAt'])
+        && data.id is string && data.id.size() <= 64
+        && data.name is string && data.name.size() <= 100
+        && data.lat is number
+        && data.lng is number
+        && data.capacity is number && data.capacity >= 0.0 && data.capacity <= 100.0
+        && data.isOperational is bool
+        && data.isEngineFlooded is bool
+        && data.flowRate is number && data.flowRate >= 0.0 && data.flowRate <= 100.0
+        && data.updatedAt is string && data.updatedAt.size() <= 100;
+    }
+
+    function isValidEvacuationShelter(data) {
+      return data.keys().hasAll(['id', 'name', 'lat', 'lng', 'capacity', 'occupied', 'status', 'contactPhone'])
+        && data.id is string && data.id.size() <= 64
+        && data.name is string && data.name.size() <= 150
+        && data.lat is number
+        && data.lng is number
+        && data.capacity is int && data.capacity >= 0 && data.capacity <= 10000
+        && data.occupied is int && data.occupied >= 0 && data.occupied <= 10000
+        && data.status is string && (data.status == 'available' || data.status == 'full' || data.status == 'closed')
+        && data.contactPhone is string && data.contactPhone.size() <= 30;
+    }
+
+    // 3. SOS Reports Collection Rules
+    match /sos_reports/{reportId} {
+      allow read: if true;
+      
+      allow create: if isValidId(reportId) 
+        && isValidSOSReport(incoming());
+
+      allow update: if isValidSOSReport(incoming())
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'assignedTeam', 'updatedAt'])
+          ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['lat', 'lng', 'communityName', 'vulnerablePop', 'category', 'reporterName', 'reporterPhone', 'description', 'status', 'assignedTeam', 'updatedAt'])
+        );
+
+      allow delete: if true;
+    }
+
+    // 4. Pump Stations Telemetry Rules
+    match /pump_stations/{stationId} {
+      allow read: if true;
+
+      allow create: if isValidId(stationId)
+        && isValidPumpStation(incoming());
+
+      allow update: if isValidPumpStation(incoming())
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['isOperational', 'isEngineFlooded', 'flowRate', 'updatedAt', 'capacity', 'lat', 'lng', 'name', 'id'])
+        );
+
+      allow delete: if true;
+    }
+
+    // 5. Evacuation Shelters Rules
+    match /evacuation_shelters/{shelterId} {
+      allow read: if true;
+
+      allow create: if isValidId(shelterId)
+        && isValidEvacuationShelter(incoming());
+
+      allow update: if isValidEvacuationShelter(incoming())
+        && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['occupied', 'status', 'lat', 'lng', 'capacity', 'contactPhone', 'name', 'id'])
+        );
+
+      allow delete: if true;
+    }
+  }
+}

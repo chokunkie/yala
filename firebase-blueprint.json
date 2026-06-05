@@ -1,0 +1,73 @@
+{
+  "entities": {
+    "SOSReport": {
+      "title": "SOS Report",
+      "description": "Critical emergency SOS signals and citizen rescue requests with real-time location pinning",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique report ID" },
+        "lat": { "type": "number", "description": "Latitude coordinate of emergency pin" },
+        "lng": { "type": "number", "description": "Longitude coordinate of emergency pin" },
+        "communityName": { "type": "string", "description": "Name of the risky community (e.g. from the 41 at-risk communities)" },
+        "vulnerablePop": { "type": "integer", "description": "Number of vulnerable population in distress (elderly, infants, bedridden)" },
+        "category": { "type": "string", "enum": ["rescue", "water_food", "medical_aid", "power_outage"], "description": "Type of emergency assistance needed" },
+        "severity": { "type": "string", "enum": ["high", "critical"], "description": "Crisis severity flag" },
+        "reporterName": { "type": "string", "description": "Name of citizen or staff reporting" },
+        "reporterPhone": { "type": "string", "description": "Emergency contact number" },
+        "description": { "type": "string", "description": "Emergency request details" },
+        "status": { "type": "string", "enum": ["pending", "dispatching", "resolved"], "description": "Operational coordination status" },
+        "assignedTeam": { "type": "string", "description": "Assigned rescue agency or department name" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of rescue request registration" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Timestamp of last status modification" }
+      },
+      "required": ["lat", "lng", "communityName", "vulnerablePop", "category", "reporterName", "reporterPhone", "status", "createdAt"]
+    },
+    "PumpStation": {
+      "title": "Pump Station Operational State",
+      "description": "Real-time state and metrics of flood relief drainage pumps across Yala province",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Operational ID of the station" },
+        "name": { "type": "string", "description": "Name of the pumping station" },
+        "lat": { "type": "number", "description": "Latitude coordinate" },
+        "lng": { "type": "number", "description": "Longitude coordinate" },
+        "capacity": { "type": "number", "description": "Maximum pump capacity in m3/s" },
+        "isOperational": { "type": "boolean", "description": "Is the pump actively driving drainage?" },
+        "isEngineFlooded": { "type": "boolean", "description": "Is block flooded, shutting down hardware?" },
+        "flowRate": { "type": "number", "description": "Drainage performance in cubic meters per second (m3/s)" },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Latest telemetry heartbeat timestamp" }
+      },
+      "required": ["id", "name", "lat", "lng", "capacity", "isOperational", "isEngineFlooded", "flowRate", "updatedAt"]
+    },
+    "EvacuationShelter": {
+      "title": "Evacuation Shelter",
+      "description": "Evacuation shelters with capacities and occupation status",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique shelter ID" },
+        "name": { "type": "string", "description": "Name of the shelter" },
+        "lat": { "type": "number", "description": "Latitude coordinate" },
+        "lng": { "type": "number", "description": "Longitude coordinate" },
+        "capacity": { "type": "integer", "description": "Total bed capacity of the shelter" },
+        "occupied": { "type": "integer", "description": "Current number of occupied beds" },
+        "status": { "type": "string", "enum": ["available", "full", "closed"], "description": "Shelter status" },
+        "contactPhone": { "type": "string", "description": "Contact phone number" }
+      },
+      "required": ["id", "name", "lat", "lng", "capacity", "occupied", "status", "contactPhone"]
+    }
+  },
+  "firestore": {
+    "/sos_reports/{reportId}": {
+      "schema": "SOSReport",
+      "description": "Global list of real-time incoming citizen emergency requests"
+    },
+    "/pump_stations/{stationId}": {
+      "schema": "PumpStation",
+      "description": "Operational variables and hardware health for telemetry monitoring"
+    },
+    "/evacuation_shelters/{shelterId}": {
+      "schema": "EvacuationShelter",
+      "description": "Available shelters and active occupancy state tracking"
+    }
+  }
+}
