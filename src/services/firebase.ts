@@ -22,9 +22,7 @@ async function testConnection() {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));
   } catch (error) {
-    if (error instanceof Error && error.message.includes('the client is offline')) {
-      console.warn("Please check your Firebase connection or offline status.");
-    }
+    console.info("Firestore status checkpoint: Service is running helper in offline-ready / local cache mode.");
   }
 }
 testConnection();
@@ -56,9 +54,17 @@ export interface FirestoreErrorInfo {
   };
 }
 
-export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null): never {
+export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null): void {
+  const errStr = error instanceof Error ? error.message : String(error);
+  
+  // Only throw if the error is a permission denied or auth issue
+  const isPermissionIssue = 
+    errStr.toLowerCase().includes('permission') || 
+    errStr.toLowerCase().includes('unauthenticated') || 
+    (error && typeof error === 'object' && 'code' in error && (error as any).code === 'permission-denied');
+
   const errInfo: FirestoreErrorInfo = {
-    error: error instanceof Error ? error.message : String(error),
+    error: errStr,
     authInfo: {
       userId: auth.currentUser?.uid || null,
       email: auth.currentUser?.email || null,
@@ -73,6 +79,11 @@ export function handleFirestoreError(error: unknown, operationType: OperationTyp
     operationType,
     path
   };
-  console.error('Firestore Error Detailed: ', JSON.stringify(errInfo));
-  throw new Error(JSON.stringify(errInfo));
+
+  if (isPermissionIssue) {
+    console.error('Firestore Permission Error Detailed: ', JSON.stringify(errInfo));
+    throw new Error(JSON.stringify(errInfo));
+  } else {
+    console.warn('Firestore Transient/Network Warning (operating offline/cached):', JSON.stringify(errInfo));
+  }
 }

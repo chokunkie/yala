@@ -49,9 +49,9 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   
   // Real-time Firestore synchronizing collections
-  const [pumps, setPumps] = useState<PumpStation[]>([]);
+  const [pumps, setPumps] = useState<PumpStation[]>(YALA_PUMP_STATIONS);
   const [sensors] = useState<TelemetrySensor[]>(YALA_TELEMETRY_SENSORS); // static telemetry model for visualization
-  const [shelters, setShelters] = useState<EvacuationShelter[]>([]);
+  const [shelters, setShelters] = useState<EvacuationShelter[]>(YALA_SHELTERS);
   const [sosReports, setSosReports] = useState<SOSReport[]>([]);
 
   // Simulation state variables
