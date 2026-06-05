@@ -99,103 +99,103 @@ export default function SosCoordinator({
   };
 
   return (
-    <div className="flex flex-col gap-5 bg-slate-950/40 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl shadow-xl h-full">
+    <div className="minimal-card p-5 flex flex-col gap-6 h-full text-left">
       {/* Title block */}
-      <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
+      <div className="flex items-center justify-between border-b border-white/[0.04] pb-3.5">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="w-4 h-4 text-rose-500 animate-pulse" />
-          <h2 className="text-xs font-semibold text-slate-200 uppercase tracking-widest font-sans">ระบบประสานกู้ภัยอพยพ • SOS DISPATCH</h2>
+          <AlertTriangle className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
+          <h2 className="text-[10px] font-mono font-medium tracking-widest text-slate-300 uppercase">ระบบประสานกู้ภัยอพยพ / SOS DISPATCH</h2>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1">
         
         {/* Left Column (5/12): Add report form */}
-        <div className="lg:col-span-5 flex flex-col gap-3.5 border-r border-[#1e2338]/40 pr-0 lg:pr-5">
+        <div className="lg:col-span-5 flex flex-col gap-4 border-r border-white/[0.04] pr-0 lg:pr-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] uppercase font-semibold tracking-wider text-slate-350">บันทึกรายงานพิกัดฉุกเฉิน</h3>
+            <h3 className="text-[9px] uppercase font-mono font-semibold tracking-wider text-slate-400">บันทึกรายงานพิกัดฉุกเฉิน / NEW LOG</h3>
             {isPinningSosState ? (
               <button
                 id="cancel-pinning-btn"
                 onClick={onTogglePinningState}
-                className="bg-red-550/10 text-red-300 border border-red-500/20 px-2.5 py-0.5 rounded text-[8px] uppercase tracking-wider font-semibold flex items-center gap-1 cursor-pointer transition-all hover:bg-red-550/20"
+                className="bg-rose-500/10 text-rose-300 border border-rose-500/20 px-2 py-0.5 rounded text-[8px] font-mono uppercase tracking-wider cursor-pointer transition-all hover:bg-rose-500/20"
               >
-                <X className="w-2.5 h-2.5" /> ยกเลิก
+                <X className="w-2.5 h-2.5 inline mr-1" /> CANCEL
               </button>
             ) : (
               <button
                 id="start-pinning-btn"
                 onClick={onTogglePinningState}
-                className="bg-indigo-505/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/25 px-2.5 py-0.5 rounded text-[8px] uppercase tracking-wider font-semibold flex items-center gap-1 cursor-pointer transition-all"
+                className="bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/25 px-2 py-0.5 rounded text-[8px] font-mono uppercase tracking-wider cursor-pointer transition-all"
                 title="คลิกเพื่อเลือกตำแหน่งพิกัดบนแผนที่โดยตรง"
               >
-                <Plus className="w-2.5 h-2.5 text-cyan-400" /> ปักพิกัดฉุกเฉิน
+                <Plus className="w-2.5 h-2.5 text-indigo-400 inline mr-1" /> PIN MAP
               </button>
             )}
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-3.5 text-xs text-left">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 text-xs text-left">
             {/* Display pinning information */}
             {selectedSosLat && selectedSosLng ? (
-              <div className="bg-red-500/5 border border-red-500/25 rounded-lg p-2 flex items-center justify-between text-[10px] text-red-200">
-                <div className="flex items-center gap-1.5 leading-tight">
-                  <MapPin className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              <div className="bg-rose-500/5 border border-rose-500/20 rounded-lg p-2.5 flex items-center justify-between text-[9px] text-rose-200">
+                <div className="flex items-center gap-2 leading-tight">
+                  <MapPin className="w-3.5 h-3.5 text-rose-455 shrink-0" />
                   <div>
-                    <span className="font-semibold block uppercase tracking-wider text-[8px]">MAP POSITION READY:</span>
-                    <span className="text-slate-400 font-mono text-[9px]">{selectedSosLat.toFixed(5)}, {selectedSosLng.toFixed(5)}</span>
+                    <span className="font-semibold block uppercase tracking-wider text-[8px] text-rose-400">MAP POSITION SELECTED:</span>
+                    <span className="text-slate-400 font-mono">{selectedSosLat.toFixed(5)}, {selectedSosLng.toFixed(5)}</span>
                   </div>
                 </div>
                 <button 
                   id="clear-pinned-coord-btn"
                   type="button" 
                   onClick={onClearSelectedCoords} 
-                  className="text-slate-500 hover:text-slate-300 shrink-0 font-medium p-1 cursor-pointer text-[9px] uppercase tracking-wider"
+                  className="text-slate-500 hover:text-slate-350 shrink-0 font-mono p-1 cursor-pointer text-[8px] uppercase tracking-wider"
                 >
-                  ล้าง
+                  CLEAR
                 </button>
               </div>
             ) : (
-              <div className="bg-slate-950/20 p-2 rounded-lg text-slate-550 text-[9px] text-center border border-dashed border-slate-800/80 font-light leading-snug">
-                ระบบระบุพิกัดอัตโนมัติตามจุดศูนย์กลางชุมชนชราภาพที่ปักไว้เป็นเป้าหมายหลัก
+              <div className="bg-white/[0.01] p-2.5 rounded-lg text-slate-550 text-[8px] text-center border border-dashed border-white/[0.04] font-mono uppercase tracking-wider leading-snug">
+                AUTO-RESOLVING TO COMMUNITY CENTROID
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="flex flex-col gap-1">
-                <label className="text-slate-500 text-[8px] uppercase tracking-wider font-semibold">เลือกชุมชนที่ประสบภัย</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400 text-[8px] font-mono uppercase tracking-wider font-semibold">เลือกชุมชนที่ประสบภัย</label>
                 <select
                   id="community-select"
                   value={communityName}
                   onChange={(e) => setCommunityName(e.target.value)}
-                  className="bg-slate-900/65 border border-slate-800/80 text-slate-200 rounded p-1.5 focus:border-indigo-500/60 focus:outline-hidden"
+                  className="bg-white/[0.02] border border-white/[0.06] text-slate-200 rounded-lg p-2 focus:border-indigo-500/50 focus:outline-hidden"
                 >
                   {YALA_COMMUNITIES.map(comm => (
-                    <option key={comm.id} value={comm.name} className="text-slate-850">
-                      {comm.name} ({comm.subdistrict})
+                    <option key={comm.id} value={comm.name} className="bg-[#0b0c10] text-slate-300">
+                      {comm.name}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-slate-500 text-[8px] uppercase tracking-wider font-semibold">ประเภทภัยพิบัติ</label>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400 text-[8px] font-mono uppercase tracking-wider font-semibold">ประเภทภัยพิบัติ</label>
                 <select
                   id="category-select"
                   value={category}
                   onChange={(e) => setCategory(e.target.value as any)}
-                  className="bg-slate-900/65 border border-slate-800/80 text-slate-200 rounded p-1.5 focus:border-indigo-500/60 focus:outline-hidden"
+                  className="bg-white/[0.02] border border-white/[0.06] text-slate-200 rounded-lg p-2 focus:border-indigo-500/50 focus:outline-hidden"
                 >
-                  <option value="rescue" className="text-slate-850">อพยพติดค้าง / ช่วยเหลือ</option>
-                  <option value="water_food" className="text-slate-850">ขาดแคลนอาหาร / น้ำ</option>
-                  <option value="medical_aid" className="text-slate-850">ยารักษาโรค / เตียงสนาม</option>
-                  <option value="power_outage" className="text-slate-850">กระแสไฟฟ้าดับเป็นวงกว้าง</option>
+                  <option value="rescue" className="bg-[#0b0c10] text-slate-300">อพยพติดค้าง</option>
+                  <option value="water_food" className="bg-[#0b0c10] text-slate-300">ขาดแคลนเสบียง</option>
+                  <option value="medical_aid" className="bg-[#0b0c10] text-slate-300">ยารักษาโรค</option>
+                  <option value="power_outage" className="bg-[#0b0c10] text-slate-300">กระแสไฟฟ้าดับ</option>
                 </select>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="flex flex-col gap-1">
-                <label className="text-slate-500 text-[8px] uppercase tracking-wider font-semibold">จำนวนประชาชนติดค้าง</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400 text-[8px] font-mono uppercase tracking-wider font-semibold">จำนวนคนติดค้าง</label>
                 <input
                   id="vulnerable-count-input"
                   type="number"
@@ -203,50 +203,50 @@ export default function SosCoordinator({
                   max="100"
                   value={vulnerablePop}
                   onChange={(e) => setVulnerablePop(Math.max(1, Number(e.target.value)))}
-                  className="bg-slate-900/65 border border-slate-800/80 text-slate-200 rounded p-1.5 font-mono text-center focus:border-indigo-500/60 focus:outline-hidden font-semibold"
+                  className="bg-white/[0.02] border border-white/[0.06] text-slate-200 rounded-lg p-2 font-mono text-center focus:border-indigo-500/50 focus:outline-hidden font-semibold"
                   required
                 />
               </div>
 
-              <div className="flex flex-col gap-1">
-                <label className="text-slate-500 text-[8px] uppercase tracking-wider font-semibold">เบอร์โทรศัพท์ผู้ติดต่อ</label>
-                <div className="relative">
-                  <Phone className="absolute left-2.5 top-2.5 w-3 h-3 text-slate-500" />
+              <div className="flex flex-col gap-1.5">
+                <label className="text-slate-400 text-[8px] font-mono uppercase tracking-wider font-semibold">เบอร์โทรศัพท์</label>
+                <div className="relative flex items-center">
+                  <Phone className="absolute left-3 w-3 h-3 text-slate-500" />
                   <input
                     id="phone-input"
                     type="tel"
-                    placeholder="เช่น 08x-xxxxxxx"
+                    placeholder="08x-xxxxxxx"
                     value={reporterPhone}
                     onChange={(e) => setReporterPhone(e.target.value)}
-                    className="bg-slate-900/65 border border-slate-800/80 text-slate-200 rounded p-1.5 pl-8 w-full focus:border-indigo-500/60 focus:outline-hidden font-mono"
+                    className="bg-white/[0.02] border border-white/[0.06] text-slate-200 rounded-lg p-2 pl-9 w-full focus:border-indigo-500/50 focus:outline-hidden font-mono"
                     required
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label className="text-slate-500 text-[8px] uppercase tracking-wider font-semibold">ชื่อผู้แจ้งเหตุฉุกเฉิน</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-slate-400 text-[8px] font-mono uppercase tracking-wider font-semibold">ชื่อผู้แจ้งเหตุ</label>
               <input
                 id="reporter-name-input"
                 type="text"
                 placeholder="กรุณากรอกชื่อจริง-นามสกุล..."
                 value={reporterName}
                 onChange={(e) => setReporterName(e.target.value)}
-                className="bg-slate-900/65 border border-slate-800/80 text-slate-200 rounded p-1.5 focus:border-indigo-500/60 focus:outline-hidden"
+                className="bg-white/[0.02] border border-white/[0.06] text-slate-200 rounded-lg p-2 focus:border-indigo-500/50 focus:outline-hidden"
                 required
               />
             </div>
 
-            <div className="flex flex-col gap-1">
-              <label className="text-slate-500 text-[8px] uppercase tracking-wider font-semibold">รายละเอียดความต้องการเพิ่มเติม</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-slate-400 text-[8px] font-mono uppercase tracking-wider font-semibold">รายละเอียดความช่วยเหลือเพิ่มเติม</label>
               <textarea
                 id="description-input"
-                placeholder="เช่น ผู้ป่วยติดเตียงต้องการเตียงสนามเคลื่อนย้าย, น้ำเริ่มล้นกำแพงบ้าน..."
+                placeholder="รายละเอียดเพิ่มเติม..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={2}
-                className="bg-slate-900/65 border border-slate-800/80 text-slate-200 rounded p-1.5 resize-none focus:border-indigo-500/60 focus:outline-hidden"
+                className="bg-white/[0.02] border border-white/[0.06] text-slate-200 rounded-lg p-2 resize-none focus:border-indigo-500/50 focus:outline-hidden"
               />
             </div>
 
@@ -254,17 +254,17 @@ export default function SosCoordinator({
               id="submit-sos-btn"
               type="submit"
               disabled={isSubmitting}
-              className="mt-1 flex items-center justify-center gap-2 bg-rose-600/90 hover:bg-rose-500 text-slate-100 hover:text-white font-medium py-2.5 rounded-lg shadow-md hover:shadow-rose-950/20 transition-all duration-300 cursor-pointer text-xs"
+              className="mt-1 flex items-center justify-center gap-2 border border-rose-500/10 bg-rose-600/10 hover:bg-rose-650 disabled:bg-rose-950/20 text-rose-350 hover:text-white font-mono py-2.5 rounded-xl transition-all duration-200 cursor-pointer text-[9px] uppercase tracking-wider font-semibold"
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>กำลังส่งข้อมูลเข้าศูนย์ปฏิบัติการ...</span>
+                  <span>กำลังส่งข้อมูล...</span>
                 </>
               ) : (
                 <>
                   <Send className="w-3 h-3" />
-                  <span className="uppercase tracking-wider text-[9px] font-medium">บันทึกสัญญาณกู้ภัย (SUBMIT SOS SIGNAL)</span>
+                  <span>SUBMIT SOS SIGNAL</span>
                 </>
               )}
             </button>
@@ -272,101 +272,101 @@ export default function SosCoordinator({
         </div>
 
         {/* Right Column (7/12): Live feed dispatch log */}
-        <div className="lg:col-span-7 flex flex-col gap-3.5">
+        <div className="lg:col-span-7 flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-[10px] uppercase font-semibold tracking-wider text-slate-350 flex items-center gap-2">
+            <h3 className="text-[9px] font-mono font-semibold tracking-wider text-slate-400 flex items-center gap-2 uppercase">
               <span className="flex h-1.5 w-1.5 rounded-full bg-rose-500 animate-ping"></span>
-              <span>รายการแจ้งเหตุเรียลไทม์ ({sosReports.filter(r => r.status !== 'resolved').length})</span>
+              <span>เหตุเรียลไทม์ / LIVE MONITOR ({sosReports.filter(r => r.status !== 'resolved').length})</span>
             </h3>
-            <span className="text-[8px] text-slate-500 font-mono">SYNCED WITH FIRESTORE</span>
+            <span className="text-[7.5px] text-slate-500 font-mono tracking-widest uppercase">SYNCED</span>
           </div>
 
-          <div className="flex-1 overflow-y-auto max-h-[340px] border border-slate-800/60 rounded-xl bg-slate-950/20 p-2 text-xs flex flex-col gap-2.5 custom-scrollbar font-light">
+          <div className="flex-1 overflow-y-auto max-h-[340px] border border-white/[0.04] rounded-xl bg-white/[0.01] p-3 text-xs flex flex-col gap-3 custom-scrollbar">
             {sosReports.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center gap-2 text-slate-500 p-8">
-                <ShieldCheck className="w-8 h-8 text-slate-800" />
-                <span className="leading-normal text-[10px] text-slate-400">ขณะนี้ไม่มีสายโทรช่วยเหลือแจ้ง SOS ในระบบ</span>
+                <ShieldCheck className="w-7 h-7 text-slate-700" />
+                <span className="text-[9px] font-mono uppercase tracking-widest text-slate-500">NO ACTIVE SOS REPORTS</span>
               </div>
             ) : (
               sosReports.map(rp => {
-                let badgeColor = "bg-rose-500/10 text-rose-350 border-rose-550/20";
+                let badgeColor = "bg-rose-500/5 text-rose-350 border-rose-500/15";
                 let catText = "ช่วยชีพ";
                 
                 if (rp.category === 'water_food') {
-                  badgeColor = "bg-orange-500/10 text-orange-355 border-orange-550/20";
+                  badgeColor = "bg-amber-500/5 text-amber-350 border-amber-500/15";
                   catText = "เสบียงอาหาร";
                 } else if (rp.category === 'medical_aid') {
-                  badgeColor = "bg-red-500/10 text-red-355 border-red-550/20";
+                  badgeColor = "bg-red-500/5 text-red-350 border-red-500/15";
                   catText = "ยารักษาโรค";
                 } else if (rp.category === 'power_outage') {
-                  badgeColor = "bg-yellow-500/10 text-yellow-355 border-yellow-550/20";
-                  catText = "ระบบไฟดับ";
+                  badgeColor = "bg-cyan-500/5 text-cyan-350 border-cyan-500/15";
+                  catText = "กระแสไฟดับ";
                 }
 
                 if (rp.status === 'resolved') {
-                  badgeColor = "bg-slate-900 border-slate-800 text-slate-500";
+                  badgeColor = "bg-[#0b0c10]/20 border-white/[0.02] text-slate-550";
                 }
 
                 return (
                   <div 
                     key={rp.id}
-                    className={`p-3 border rounded-xl flex flex-col gap-2 text-left relative overflow-hidden transition-all duration-300 ${
+                    className={`p-3.5 border rounded-xl flex flex-col gap-2.5 text-left relative overflow-hidden transition-all duration-200 ${
                       rp.status === 'resolved' 
-                        ? 'bg-slate-950/5 border-slate-900/60 opacity-40' 
+                        ? 'bg-white/[0.01] border-white/[0.02] opacity-30' 
                         : rp.status === 'dispatching'
-                        ? 'bg-amber-950/5 border-amber-500/20 shadow-xs'
-                        : 'bg-rose-950/5 border-rose-500/20 shadow-xs'
+                        ? 'bg-amber-500/5 border-amber-500/15'
+                        : 'bg-rose-500/5 border-rose-500/15'
                     }`}
                   >
                     <div className="flex items-center justify-between border-b border-white/[0.03] pb-2">
                       <div className="flex items-center gap-2">
-                        <span className={`px-2 py-0.5 rounded-full border text-[8px] font-semibold tracking-wider ${badgeColor}`}>
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-mono tracking-wider font-medium uppercase border ${badgeColor}`}>
                           {catText}
                         </span>
                         <span className="font-semibold text-slate-200">ชุมชน{rp.communityName}</span>
                       </div>
-                      <span className={`px-2 py-0.5 rounded-full text-[8px] font-mono tracking-wider font-semibold uppercase ${
-                        rp.status === 'pending' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
-                        rp.status === 'dispatching' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                        'bg-slate-850 text-slate-400 border border-slate-700/80'
+                      <span className={`px-1.5 py-0.5 rounded text-[8.5px] font-mono tracking-wider font-semibold uppercase ${
+                        rp.status === 'pending' ? 'text-rose-455' :
+                        rp.status === 'dispatching' ? 'text-amber-400' :
+                        'text-slate-500'
                       }`}>
                         {rp.status}
                       </span>
                     </div>
 
-                    <p className="text-slate-300 text-[10px] leading-relaxed font-light">
+                    <p className="text-slate-350 text-[10px] leading-relaxed font-light">
                       {rp.description || 'ไม่ได้ระบุรายละเอียดข้อเดือดร้อนเพิ่มเติม'}
                     </p>
 
-                    <div className="flex sm:flex-row flex-col justify-between items-start sm:items-center text-[9px] text-slate-500 border-t border-white/[0.03] pt-2 gap-2 mt-1">
+                    <div className="flex sm:flex-row flex-col justify-between items-start sm:items-center text-[8.5px] text-slate-500 border-t border-white/[0.03] pt-2 gap-2 mt-1">
                       <div className="flex flex-wrap items-center gap-3">
-                        <span className="flex items-center gap-1 text-slate-400 font-light">
-                          <Users className="w-3.5 h-3.5 text-slate-600 shrink-0" />
-                          กลุ่มเปราะบาง: <b className="font-mono text-slate-200 font-bold">{rp.vulnerablePop} คน</b>
+                        <span className="flex items-center gap-1 text-slate-400 font-mono">
+                          <Users className="w-3 h-3 text-slate-500 shrink-0" />
+                          เปราะบาง: <b className="font-mono text-slate-200 font-bold">{rp.vulnerablePop} คน</b>
                         </span>
-                        <span className="flex items-center gap-1 font-mono text-slate-405 hover:text-white transition-colors">
-                          <Phone className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                        <span className="flex items-center gap-1 font-mono text-slate-455">
+                          <Phone className="w-3 h-3 text-slate-500 shrink-0" />
                           {rp.reporterPhone} ({rp.reporterName})
                         </span>
                       </div>
 
                       {/* Operator dispatch buttons */}
                       {isLoggedIn && (
-                        <div className="flex items-center gap-1.5 shrink-0 self-end font-sans">
+                        <div className="flex items-center gap-1.5 shrink-0 self-end font-mono">
                           {rp.status === 'pending' && (
                             <button
                               onClick={() => onUpdateSosStatus(rp.id, 'dispatching')}
-                              className="px-2 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold transition-transform hover:scale-105 active:scale-95 cursor-pointer text-[9px] uppercase tracking-wider"
+                              className="px-2 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold cursor-pointer text-[8px] uppercase tracking-wider"
                             >
-                              ส่งทีมปฏิบัติงาน
+                              DISPATCH
                             </button>
                           )}
                           {(rp.status === 'pending' || rp.status === 'dispatching') && (
                             <button
                               onClick={() => onUpdateSosStatus(rp.id, 'resolved')}
-                              className="px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-semibold transition-transform hover:scale-105 active:scale-95 cursor-pointer text-[9px] uppercase tracking-wider flex items-center gap-0.5"
+                              className="px-2 py-1 rounded bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold cursor-pointer text-[8px] uppercase tracking-wider flex items-center gap-0.5"
                             >
-                              <Check className="w-2.5 h-2.5" /> เสร็จสิ้น
+                              <Check className="w-2.5 h-2.5 inline" /> RESOLVE
                             </button>
                           )}
                         </div>
