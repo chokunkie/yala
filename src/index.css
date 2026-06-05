@@ -1,6 +1,5 @@
-@import "tailwindcss";
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;750&family=JetBrains+Mono:wght@300;400;500&display=swap');
+@import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
@@ -11,7 +10,7 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: #070913;
+  background-color: #09040a;
 }
 
 /* Custom scrollbars */
@@ -20,28 +19,28 @@ body {
   height: 5px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(30, 5, 15, 0.4);
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.5);
+  background: rgba(219, 39, 119, 0.35);
   border-radius: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.7);
+  background: rgba(236, 72, 153, 0.6);
 }
 
 /* Leaflet Dark Resets */
 .leaflet-popup-content-wrapper {
-  background: #0f172a !important;
+  background: #1a0515 !important;
   color: #f1f5f9 !important;
-  border: 1px solid #334155 !important;
+  border: 1px solid #4a1030 !important;
   border-radius: 12px !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.6) !important;
 }
 
 .leaflet-popup-tip {
-  background: #0f172a !important;
-  border: 1px solid #334155 !important;
+  background: #1a0515 !important;
+  border: 1px solid #4a1030 !important;
 }
 
 .leaflet-container {

@@ -111,10 +111,10 @@ export default function SimulationPanel({
   };
 
   return (
-    <div className="flex flex-col gap-5 bg-slate-950/40 border border-slate-800/80 rounded-2xl p-5 backdrop-blur-xl shadow-xl">
+    <div className="flex flex-col gap-5 bg-pink-950/10 border border-pink-900/30 rounded-2xl p-5 backdrop-blur-xl shadow-xl">
       <div className="flex items-center justify-between border-b border-slate-800/60 pb-3">
         <div className="flex items-center gap-2">
-          <Settings className="w-4 h-4 text-indigo-400" />
+          <Settings className="w-4 h-4 text-pink-400" />
           <h2 className="text-xs font-semibold text-slate-200 uppercase tracking-widest">แผงจำลองสถานการณ์ • CRISIS ENGINE</h2>
         </div>
         <div className="flex items-center gap-1 bg-slate-900/60 p-1 rounded-lg border border-slate-800/80 text-[10px] text-slate-400 font-medium">
@@ -149,7 +149,7 @@ export default function SimulationPanel({
           <div className="flex flex-col gap-1.5 p-2.5 bg-slate-950/20 border border-slate-900 rounded-lg">
             <div className="flex justify-between font-medium">
               <span className="text-slate-400 text-[10px] uppercase tracking-wider">ปริมาณน้ำฝนสะสม (24 ชม.)</span>
-              <span className="text-indigo-400 font-mono font-bold">{params.rainfall_24h} mm</span>
+              <span className="text-pink-400 font-mono font-bold">{params.rainfall_24h} mm</span>
             </div>
             <input 
               id="rainfall-24h-slider"
@@ -159,7 +159,7 @@ export default function SimulationPanel({
               step="1"
               value={params.rainfall_24h}
               onChange={(e) => handleSliderChange('rainfall_24h', Number(e.target.value))}
-              className="w-full accent-indigo-500 bg-slate-800 h-1 rounded-lg appearance-none cursor-pointer"
+              className="w-full accent-pink-500 bg-slate-800 h-1 rounded-lg appearance-none cursor-pointer"
             />
             <div className="flex justify-between text-[9px] text-slate-500 font-light mt-0.5">
               <span>ฝนเบา (&lt; 50mm)</span>
@@ -184,7 +184,7 @@ export default function SimulationPanel({
             />
             <div className="flex justify-between text-[9px] text-slate-500 font-light mt-0.5">
               <span>ปกติ (&lt; 150mm)</span>
-              <span className="text-indigo-400">วิกฤตสะสม (1,072mm)</span>
+              <span className="text-pink-400">วิกฤตสะสม (1,072mm)</span>
             </div>
           </div>
 
@@ -306,7 +306,7 @@ export default function SimulationPanel({
           id="run-ai-prediction-btn"
           onClick={executePrediction}
           disabled={aiLoading}
-          className="flex-1 flex items-center justify-center gap-2 border border-indigo-500/20 bg-indigo-600/90 hover:bg-indigo-500 disabled:bg-indigo-950/40 text-slate-100 hover:text-white px-5 py-2.5 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.005] active:scale-[0.995] disabled:scale-100 cursor-pointer text-xs font-medium uppercase"
+          className="flex-1 flex items-center justify-center gap-2 border border-pink-500/20 bg-pink-600/80 hover:bg-pink-500 disabled:bg-pink-950/40 text-slate-100 hover:text-white px-5 py-2.5 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.005] active:scale-[0.995] disabled:scale-100 cursor-pointer text-xs font-medium uppercase"
         >
           {aiLoading ? (
             <>
@@ -316,7 +316,7 @@ export default function SimulationPanel({
           ) : (
             <>
               <Sparkles className="w-3.5 h-3.5 text-emerald-400 group-hover:animate-bounce shrink-0" />
-              <span className="tracking-wide text-[10px]">วิเคราะห์ภัยคุกคามด้วยระบบปัญญาประดิษฐ์ (Run Gemini Index)</span>
+              <span className="tracking-wide text-[10px]">วิเคราะห์ภัยคุกคามด้วยระบบปัญญาประดิษฐ์ท้องถิ่น (Run Local Index)</span>
             </>
           )}
         </button>
@@ -331,13 +331,13 @@ export default function SimulationPanel({
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden border-t border-slate-800/60 mt-1"
           >
-            <div className="p-4 bg-slate-950/30 border border-indigo-500/10 rounded-xl mt-4 flex flex-col gap-2 max-h-[350px] overflow-y-auto custom-scrollbar shadow-inner">
+            <div className="p-4 bg-pink-950/20 border border-pink-500/10 rounded-xl mt-4 flex flex-col gap-2 max-h-[350px] overflow-y-auto custom-scrollbar shadow-inner">
               <div className="flex items-center justify-between border-b border-white/[0.04] pb-2">
-                <div className="flex items-center gap-1.5 text-indigo-400 font-medium">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="text-[10px] uppercase font-semibold tracking-wider">เอกสารวิเคราะห์ความเสี่ยงเชิงพยากรณ์ • GEMINI INTEL</span>
+                <div className="flex items-center gap-1.5 text-pink-400 font-medium">
+                  <Sparkles className="w-3.5 h-3.5 text-pink-300" />
+                  <span className="text-[10px] uppercase font-semibold tracking-wider">เอกสารวิเคราะห์ความเสี่ยงเชิงพยากรณ์ • LOCAL AI INTEL</span>
                 </div>
-                <span className="text-[8px] text-indigo-400/80 font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 tracking-widest leading-none">ICT CONFIRMED</span>
+                <span className="text-[8px] text-pink-400/80 font-mono px-2 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/25 tracking-widest leading-none">ICT CONFIRMED</span>
               </div>
               <div className="text-slate-350 leading-relaxed text-xs font-sans text-left prose prose-invert prose-xs max-w-none font-light">
                 {/* Visual rendering of Markdown report */}
