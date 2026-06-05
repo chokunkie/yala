@@ -338,28 +338,28 @@ export default function App() {
   const shelterSuccessRatio = Number(((occupiedShelterSlots / totalShelterLimit) * 100).toFixed(0));
 
   return (
-    <div className="min-h-screen bg-[#08090c] text-slate-200 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#070913] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
       
       {/* 1. Header Navigation HUD */}
-      <header className="border-b border-white/[0.04] bg-[#08090c]/85 px-6 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-[1000] backdrop-blur-md">
+      <header className="border-b border-slate-800 bg-slate-950/80 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-[1000] backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="border border-white/[0.04] bg-white/[0.01] p-2 rounded-lg text-indigo-400">
-            <Waves className="w-4 h-4 text-indigo-400" />
+          <div className="bg-gradient-to-br from-indigo-500 to-cyan-500 p-2.5 rounded-xl shadow-lg shadow-indigo-950/50">
+            <Waves className="w-5 h-5 text-white animate-pulse" />
           </div>
           <div className="flex flex-col text-left">
-            <h1 className="text-xs font-bold tracking-wider text-slate-100 flex items-center gap-2 leading-none uppercase font-mono">
-              <span>ศูนย์วิเคราะห์อุทกภัยยะลา / YALA FLOOD GIS</span>
-              <span className="text-[7.5px] bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-bold px-1.5 py-0.5 rounded tracking-widest font-mono">PROTOTYPE</span>
+            <h1 className="text-sm font-bold tracking-wider text-slate-100 flex items-center gap-1.5 leading-none">
+              <span>ศูนย์บัญชาการวิเคราะห์อุทกภัยยะลา GIS Dashboard</span>
+              <span className="text-[10px] bg-red-950 text-red-400 border border-red-900/30 font-bold px-1.5 py-0.5 rounded">PROTOTYPE</span>
             </h1>
-            <span className="text-[10px] text-slate-500 mt-1 font-medium font-mono uppercase tracking-wide">AI PREDICTIVE DECISION SUPPORT HUB</span>
+            <span className="text-[11px] text-slate-400 mt-1 font-medium">Flood Disaster Management & AI Predictive Decision Support System</span>
           </div>
         </div>
 
         {/* Status markers & Auth */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Time ICT */}
-          <div className="flex items-center gap-2 bg-white/[0.01] border border-white/[0.04] px-3 py-1.5 rounded-lg text-[10px] font-mono text-slate-400">
-            <Clock className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+          <div className="flex items-center gap-2 bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-300">
+            <Clock className="w-4 h-4 text-cyan-400 shrink-0" />
             <span>{currentTime || '12:00:00 ICT'}</span>
           </div>
 
@@ -368,9 +368,9 @@ export default function App() {
       </header>
 
       {/* 2. Main GIS Workplace Layout */}
-      <main className="flex-1 p-5 lg:p-6 grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
+      <main className="flex-1 p-4 lg:p-6 grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
         
-        {/* Left side rails (4/12): Analytics and simulation parameters */}
+        {/* Left side rails (5/12): Analytics and simulation parameters */}
         <div className="xl:col-span-4 flex flex-col gap-6">
           <DisasterControlPanel 
             activeLayers={activeLayers}
@@ -397,7 +397,7 @@ export default function App() {
           
           <div className="flex-1 flex flex-col gap-6">
             {/* Interactive MAP */}
-            <div className="h-[400px] lg:h-[500px] w-full shrink-0 border border-white/[0.04] rounded-2xl overflow-hidden shadow-2xl relative bg-[#0b0c10]/40">
+            <div className="h-[400px] lg:h-[500px] w-full shrink-0">
               <FloodMap 
                 activeLayers={activeLayers}
                 pumps={pumps}
@@ -411,7 +411,7 @@ export default function App() {
               />
             </div>
 
-            {/* Citizen SOS Emergency Feed Coordinator */}
+            {/* Citizenn SOS Emergency Feed Coordinator */}
             <div className="flex-1 min-h-[300px]">
               <SosCoordinator 
                 sosReports={sosReports}
@@ -449,15 +449,15 @@ export default function App() {
       </main>
 
       {/* 3. Operational Footer HUD */}
-      <footer className="border-t border-white/[0.04] bg-[#08090c]/50 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-[9px] text-slate-500 font-mono tracking-widest uppercase gap-3">
-        <div className="flex items-center gap-2">
+      <footer className="border-t border-slate-800 bg-slate-950 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-3">
+        <div className="flex items-center gap-1.5">
           <Grid className="w-3.5 h-3.5 text-indigo-400" />
           <span>ระบบศูนย์บัญชาการข้อมูลและสนับสนุนการตัดสินใจอุทกภัยอัจฉริยะ (ศอป.ยะลา)</span>
         </div>
         <div className="flex items-center gap-3 font-mono">
-          <span>FIRESTORE: ACTIVE</span>
-          <span className="text-slate-755">•</span>
-          <span>GEMINI MODEL: 3.5 FLASH</span>
+          <span>FIRESTORE CLOUD INTEGRATION: ACTIVE</span>
+          <span className="text-cyan-500/80">•</span>
+          <span>GEMINI PREDICTIVE LOGIC: VER 3.5</span>
         </div>
       </footer>
     </div>
