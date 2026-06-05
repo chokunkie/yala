@@ -338,12 +338,12 @@ export default function App() {
   const shelterSuccessRatio = Number(((occupiedShelterSlots / totalShelterLimit) * 100).toFixed(0));
 
   return (
-    <div className="min-h-screen bg-[#09040a] text-slate-100 flex flex-col font-sans selection:bg-pink-500 selection:text-white">
+    <div className="min-h-screen bg-[#070913] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
       
       {/* 1. Header Navigation HUD */}
-      <header className="border-b border-pink-950/60 bg-[#0f0209]/80 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-[1000] backdrop-blur-md">
+      <header className="border-b border-slate-800 bg-slate-950/80 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-[1000] backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <div className="bg-gradient-to-br from-pink-500 to-rose-600 p-2.5 rounded-xl shadow-lg shadow-pink-950/50">
+          <div className="bg-gradient-to-br from-indigo-500 to-cyan-500 p-2.5 rounded-xl shadow-lg shadow-indigo-950/50">
             <Waves className="w-5 h-5 text-white animate-pulse" />
           </div>
           <div className="flex flex-col text-left">
@@ -358,8 +358,8 @@ export default function App() {
         {/* Status markers & Auth */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Time ICT */}
-          <div className="flex items-center gap-2 bg-pink-950/30 border border-pink-900/40 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-300">
-            <Clock className="w-4 h-4 text-pink-400 shrink-0" />
+          <div className="flex items-center gap-2 bg-slate-900/50 border border-slate-800 px-3 py-1.5 rounded-lg text-xs font-mono text-slate-300">
+            <Clock className="w-4 h-4 text-cyan-400 shrink-0" />
             <span>{currentTime || '12:00:00 ICT'}</span>
           </div>
 
@@ -449,15 +449,15 @@ export default function App() {
       </main>
 
       {/* 3. Operational Footer HUD */}
-      <footer className="border-t border-pink-950/60 bg-[#0f0209] px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-3">
+      <footer className="border-t border-slate-800 bg-slate-950 px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-500 gap-3">
         <div className="flex items-center gap-1.5">
-          <Grid className="w-3.5 h-3.5 text-pink-400" />
+          <Grid className="w-3.5 h-3.5 text-indigo-400" />
           <span>ระบบศูนย์บัญชาการข้อมูลและสนับสนุนการตัดสินใจอุทกภัยอัจฉริยะ (ศอป.ยะลา)</span>
         </div>
         <div className="flex items-center gap-3 font-mono">
           <span>FIRESTORE CLOUD INTEGRATION: ACTIVE</span>
-          <span className="text-pink-500/80">•</span>
-          <span>LOCAL PREDICTIVE LOGIC: ACTIVE</span>
+          <span className="text-cyan-500/80">•</span>
+          <span>GEMINI PREDICTIVE LOGIC: VER 3.5</span>
         </div>
       </footer>
     </div>
