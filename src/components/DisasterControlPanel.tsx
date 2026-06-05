@@ -241,14 +241,14 @@ export default function DisasterControlPanel({
       <div className="bg-slate-950/40 p-3 border border-slate-800/60 rounded-xl flex flex-col justify-between min-h-[160px]">
         <div className="flex items-center justify-between mb-2">
           <span className="text-[10px] text-slate-400 font-semibold tracking-wider block">สถิติปริมาณน้ำฝนสะสม รายชั่วโมง (5 วัน)</span>
-          <span className="text-[9px] bg-slate-900 px-1.5 py-0.5 rounded text-indigo-400 font-mono">สูงสุด 303.6 mm</span>
+          <span className="text-[9px] bg-slate-900 px-1.5 py-0.5 rounded text-blue-400 font-mono">สูงสุด 303.6 mm</span>
         </div>
         <div className="w-full h-24 flex items-end">
           <svg className="w-full h-full" viewBox="0 0 300 100" preserveAspectRatio="none">
             <defs>
               <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#db2777" stopOpacity="0.4" />
-                <stop offset="100%" stopColor="#db2777" stopOpacity="0.0" />
+                <stop offset="0%" stopColor="#2563eb" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="#2563eb" stopOpacity="0.0" />
               </linearGradient>
             </defs>
             {/* Background grids */}
@@ -281,16 +281,16 @@ export default function DisasterControlPanel({
                 L 300 ${100 - (Math.min(350, rainHistoryData[4].rainfall) / 350) * 80}
               `}
               fill="none"
-              stroke="#ec4899"
+              stroke="#2563eb"
               strokeWidth="2"
             />
 
             {/* Glowing dots at data checkpoints */}
-            <circle cx="0" cy={100 - (rainHistoryData[0].rainfall / 350) * 80} r="3" fill="#f472b6" />
-            <circle cx="75" cy={100 - (rainHistoryData[1].rainfall / 350) * 80} r="3" fill="#f472b6" />
-            <circle cx="150" cy={100 - (rainHistoryData[2].rainfall / 350) * 80} r="3" fill="#f472b6" />
+            <circle cx="0" cy={100 - (rainHistoryData[0].rainfall / 350) * 80} r="3" fill="#60a5fa" />
+            <circle cx="75" cy={100 - (rainHistoryData[1].rainfall / 350) * 80} r="3" fill="#60a5fa" />
+            <circle cx="150" cy={100 - (rainHistoryData[2].rainfall / 350) * 80} r="3" fill="#60a5fa" />
             <circle cx="225" cy={100 - (rainHistoryData[3].rainfall / 350) * 80} r="3" fill="#f43f5e" className="animate-ping" />
-            <circle cx="300" cy={100 - (Math.min(350, rainHistoryData[4].rainfall) / 350) * 80} r="3" fill="#db2777" />
+            <circle cx="300" cy={100 - (Math.min(350, rainHistoryData[4].rainfall) / 350) * 80} r="3" fill="#3b82f6" />
           </svg>
         </div>
 

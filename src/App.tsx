@@ -338,7 +338,7 @@ export default function App() {
   const shelterSuccessRatio = Number(((occupiedShelterSlots / totalShelterLimit) * 100).toFixed(0));
 
   return (
-    <div className="min-h-screen bg-[#090407] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#070913] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
       
       {/* 1. Header Navigation HUD */}
       <header className="border-b border-slate-800 bg-slate-950/80 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-[1000] backdrop-blur-md">
@@ -349,9 +349,9 @@ export default function App() {
           <div className="flex flex-col text-left">
             <h1 className="text-sm font-bold tracking-wider text-slate-100 flex items-center gap-1.5 leading-none">
               <span>ศูนย์บัญชาการวิเคราะห์อุทกภัยยะลา GIS Dashboard</span>
-              <span className="text-[10px] bg-red-950 text-red-400 border border-red-900/30 font-bold px-1.5 py-0.5 rounded">PROTOTYPE (LOCAL AI)</span>
+              <span className="text-[10px] bg-red-950 text-red-400 border border-red-900/30 font-bold px-1.5 py-0.5 rounded">PROTOTYPE</span>
             </h1>
-            <span className="text-[11px] text-slate-400 mt-1 font-medium">Flood Disaster Management & Local AI Predictive Decision Support System (No API Key Required)</span>
+            <span className="text-[11px] text-slate-400 mt-1 font-medium">Flood Disaster Management & AI Predictive Decision Support System</span>
           </div>
         </div>
 
@@ -457,7 +457,7 @@ export default function App() {
         <div className="flex items-center gap-3 font-mono">
           <span>FIRESTORE CLOUD INTEGRATION: ACTIVE</span>
           <span className="text-cyan-500/80">•</span>
-          <span>LOCAL PREDICTIVE LOGIC: ACTIVE (NO API KEY REQUIRED)</span>
+          <span>GEMINI PREDICTIVE LOGIC: VER 3.5</span>
         </div>
       </footer>
     </div>
