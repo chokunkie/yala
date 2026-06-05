@@ -2,5 +2,5 @@
   "name": "Flood Disaster Management GIS Dashboard",
   "description": "ระบบบริหารจัดการอุทกภัยและวิเคราะห์ความเสี่ยงน้ำท่วมเชิงภูมิสารสนเทศ (GIS Flood Disaster Control Center)",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": []
 }
