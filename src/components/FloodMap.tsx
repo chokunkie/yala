@@ -132,8 +132,8 @@ export default function FloodMap({
 
     // Draw Yala administrative/river zone circle boundary for GIS aesthetic
     const boundaryCircle = L.circle(yalaCenter, {
-      color: '#38bdf8',
-      fillColor: '#0ea5e9',
+      color: '#f472b6',
+      fillColor: '#ec4899',
       fillOpacity: 0.03,
       radius: 4600,
       weight: 1.5,
@@ -513,7 +513,7 @@ export default function FloodMap({
 
   // CSS fallback style inline to ensure visibility
   return (
-    <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-slate-800 bg-[#0b0f19]">
+    <div className="relative w-full h-full rounded-2xl overflow-hidden shadow-2xl border border-slate-800 bg-[#0f060b]">
       {/* Background container for leaflet */}
       <div 
         ref={mapContainerRef} 

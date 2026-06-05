@@ -316,7 +316,7 @@ export default function SimulationPanel({
           ) : (
             <>
               <Sparkles className="w-3.5 h-3.5 text-emerald-400 group-hover:animate-bounce shrink-0" />
-              <span className="tracking-wide text-[10px]">วิเคราะห์ภัยคุกคามด้วยระบบปัญญาประดิษฐ์ (Run Gemini Index)</span>
+              <span className="tracking-wide text-[10px]">วิเคราะห์ภัยคุกคามด้วยระบบปัญญาประดิษฐ์ (Local Predictive Model)</span>
             </>
           )}
         </button>
@@ -335,7 +335,7 @@ export default function SimulationPanel({
               <div className="flex items-center justify-between border-b border-white/[0.04] pb-2">
                 <div className="flex items-center gap-1.5 text-indigo-400 font-medium">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                  <span className="text-[10px] uppercase font-semibold tracking-wider">เอกสารวิเคราะห์ความเสี่ยงเชิงพยากรณ์ • GEMINI INTEL</span>
+                  <span className="text-[10px] uppercase font-semibold tracking-wider">เอกสารวิเคราะห์ความเสี่ยงเชิงพยากรณ์ • LOCAL AI INTEL</span>
                 </div>
                 <span className="text-[8px] text-indigo-400/80 font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 tracking-widest leading-none">ICT CONFIRMED</span>
               </div>

@@ -111,7 +111,7 @@ export default function InfoDrawer({
       initial={{ x: 320, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: 320, opacity: 0 }}
-      className="w-full md:w-80 shrink-0 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col gap-4 text-xs text-left text-slate-300 shadow-2xl relative"
+      className="w-full md:w-80 shrink-0 bg-[#140e16] border border-slate-800 rounded-2xl p-4 flex flex-col gap-4 text-xs text-left text-slate-300 shadow-2xl relative"
     >
       {/* Title section */}
       <div className="flex items-start justify-between border-b border-slate-800 pb-3">
